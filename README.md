@@ -1,26 +1,15 @@
-# Terry MOW - Settings backend
+# Installation
+> `npm install --save @types/node`
 
-This repository adds a small Express backend that stores application settings in MongoDB and serves the existing `index.html`.
+# Summary
+This package contains type definitions for node (https://nodejs.org/).
 
-Quick start
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node.
 
-1. Install dependencies
+### Additional Details
+ * Last updated: Wed, 10 Jun 2026 22:15:09 GMT
+ * Dependencies: [undici-types](https://npmjs.com/package/undici-types)
 
-```bash
-npm install
-```
-
-2. Create a `.env` file (copy `.env.example`) and set values if needed.
-
-3. Start the server
-
-```bash
-npm start
-```
-
-The server will run on `http://localhost:3000` by default and exposes the following endpoints:
-
-- `GET /api/settings/:id` - get settings (e.g. `config`)
-- `POST /api/settings/:id` - upsert settings (body should be JSON)
-
-`index.html` now attempts a best-effort sync of the `settings` store with these endpoints.
+# Credits
+These definitions were written by [Microsoft TypeScript](https://github.com/Microsoft), [Alberto Schiabel](https://github.com/jkomyno), [Andrew Makarov](https://github.com/r3nya), [Benjamin Toueg](https://github.com/btoueg), [David Junger](https://github.com/touffy), [Mohsen Azimi](https://github.com/mohsen1), [Nikita Galkin](https://github.com/galkin), [Sebastian Silbermann](https://github.com/eps1lon), [Wilco Bakker](https://github.com/WilcoBakker), [Marcin Kopacz](https://github.com/chyzwar), [Trivikram Kamat](https://github.com/trivikr), [Junxiao Shi](https://github.com/yoursunny), [Ilia Baryshnikov](https://github.com/qwelias), [ExE Boss](https://github.com/ExE-Boss), [Piotr Błażejewicz](https://github.com/peterblazejewicz), [Anna Henningsen](https://github.com/addaleax), [Victor Perin](https://github.com/victorperin), [NodeJS Contributors](https://github.com/NodeJS), [Linus Unnebäck](https://github.com/LinusU), [wafuwafu13](https://github.com/wafuwafu13), [Matteo Collina](https://github.com/mcollina), [Dmitry Semigradsky](https://github.com/Semigradsky), [René](https://github.com/Renegade334), and [Yagiz Nizipli](https://github.com/anonrig).
