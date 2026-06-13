@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOW Identification App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0a3d62;
+            --secondary-blue: #1e3799;
+            --accent-blue: #4a90e2;
+            --white: #ffffff;
+            --bg-grey: #f5f6fa;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: var(--bg-grey);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .btn {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Page Navigation */
+        .page {
+            display: none;
+            min-height: 100vh;
+            animation: fadeIn 0.5s;
+        }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Blue Flash Highlight */
+        @keyframes blueFlash {
+            0% { background-color: transparent; color: inherit; }
+            25% { background-color: var(--accent-blue); color: white; box-shadow: 0 0 15px var(--accent-blue); }
+            50% { background-color: transparent; color: inherit; }
+            75% { background-color: var(--accent-blue); color: white; box-shadow: 0 0 15px var(--accent-blue); }
+            100% { background-color: transparent; color: inherit; }
+        }
+
+        .flash-highlight {
+            animation: blueFlash 1.5s ease-in-out;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: var(--secondary-blue); }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        .btn-danger { background: #c0392b; }
+
+        /* Forms */
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        /* Passport */
+        .passport-box {
+            width: 130px;
+            height: 160px;
+            background: #eee;
+            border: 2px dashed var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.8rem;
+            text-align: center;
+            overflow: hidden;
+        }
+        .passport-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+<!-- WELCOME PAGE -->
+<div id="page-welcome" class="page active" style="background: linear-gradient(135deg, #fff 0%, #e6f0ff 100%);">
+    <div style="max-width: 400px; margin: 50px auto; text-align: center;">
+        <img id="welcome-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzBhM2Q2MiIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNMTIgMlYyMk0xMiAyQzYgMiAyIDYgMiAxMlM2IDIyIDEyIDIyUzIyIDE4IDIyIDEyUzE4IDIgMTIgMloiLz48L3N2Zz4=" alt="Logo" style="width:80px; height:80px; margin-bottom: 10px;">
+        
+        <div id="welcome-text" style="font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: var(--primary-blue); margin-bottom: 20px;">
+            MAN O' WAR NIG UNILAG<br>(WATER UNIT)
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0; color: var(--primary-blue);">LOGIN</h3>
+            <input type="text" id="login-user" placeholder="Username (e.g., AlphaBravo)">
+            <input type="password" id="login-pass" placeholder="Password">
+            <p id="login-error" style="color:red; font-size:0.8rem; display:none;">Invalid credentials</p>
+            <button class="btn" onclick="attemptLogin()" style="width:100%;">LOGIN</button>
+        </div>
+    </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="page-dashboard" class="page">
+    <div class="header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img id="dash-logo" src="" alt="Logo" style="height:35px; display:none;">
+                <span>MOW Identification App</span>
+            </div>
+            <button class="btn" style="padding:5px 10px; font-size:0.8rem;" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div style="padding: 20px; max-width: 1000px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <!-- Register Button -->
+            <div class="card" style="text-align:center; cursor:pointer;" onclick="navigate('register')">
+                <div style="font-size: 2rem; color: var(--primary-blue);">&#43;</div>
+                <h3>Register</h3>
+                <p style="font-size:0.8rem; color:#666;">Add New Member</p>
+            </div>
+            <!-- Retrieve Button -->
+            <div class="card" style="text-align:center; cursor:pointer;" onclick="navigate('retrieve')">
+                <div style="font-size: 2rem; color: var(--primary-blue);">&#128269;</div>
+                <h3>Retrieve</h3>
+                <p style="font-size:0.8rem; color:#666;">Search Records</p>
+            </div>
+            <!-- Settings Button -->
+            <div class="card" style="text-align:center; cursor:pointer;" onclick="navigate('settings')">
+                <div style="font-size: 2rem; color: var(--primary-blue);">&#9881;</div>
+                <h3>Settings</h3>
+                <p style="font-size:0.8rem; color:#666;">Configure App</p>
+            </div>
+        </div>
+
+        <!-- Stories Section -->
+        <h3 style="border-bottom: 2px solid var(--primary-blue); padding-bottom: 5px;">Past Events & Stories</h3>
+        <div id="stories-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px; margin-top:15px;">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="page-register" class="page">
+    <div class="header">
+        <button onclick="navigate('dashboard')" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">&larr; Back</button>
+        <span style="margin-left:10px;">Member Registration</span>
+    </div>
+    <div style="padding: 20px; max-width: 600px; margin: 0 auto;">
+        <form id="reg-form" onsubmit="saveMember(event)">
+            <div class="card">
+                <h3 style="color:var(--primary-blue); margin-top:0;">Personal Information</h3>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <div class="passport-box" onclick="document.getElementById('photo-input').click()">
+                        <img id="passport-preview" src="" alt="" style="display:none;">
+                        <span id="passport-text">Upload Photo</span>
+                    </div>
+                    <input type="file" id="photo-input" style="display:none" onchange="previewPhoto(this)">
+                    <div style="flex:1; min-width:200px;">
+                        <label>Full Name *</label>
+                        <input type="text" name="fullName" required>
+                        
+                        <label>Matric Number *</label>
+                        <input type="text" name="matricNumber" required>
+                    </div>
+                </div>
+
+                <label>Rank *</label>
+                <div style="display:flex; gap:5px;">
+                    <select name="rankSelect" style="width:50%;" onchange="document.querySelector('input[name=rankText]').value = this.value">
+                        <option value="">Select...</option>
+                        <option>Cadet</option>
+                        <option>Lieutenant</option>
+                        <option>Captain</option>
+                        <option>Commander</option>
+                    </select>
+                    <input type="text" name="rankText" placeholder="Or Type Manually" style="width:50%;">
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <label>Year of Entry *</label>
+                        <input type="number" name="yearEntry" required>
+                    </div>
+                    <div>
+                        <label>Service Year *</label>
+                        <input type="number" name="serviceYear" required>
+                    </div>
+                </div>
+
+                <label>Year of Graduating</label>
+                <input type="number" name="yearGrad">
+
+                <label>Date of Birth *</label>
+                <input type="date" name="dob" required>
+
+                <label>Department *</label>
+                <input type="text" name="department" required>
+
+                <label>Faculty *</label>
+                <input type="text" name="faculty" required>
+
+                <label>State of Origin *</label>
+                <select name="state" required>
+                    <option value="">Select State</option>
+                    <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option>
+                    <option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option>
+                    <option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option>
+                    <option>Ekiti</option><option>Enugu</option><option>FCT</option><option>Gombe</option>
+                    <option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+                    <option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+                    <option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option>
+                    <option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option>
+                    <option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+                    <option>Zamfara</option>
+                </select>
+
+                <label>Nationality *</label>
+                <input type="text" name="nationality" value="Nigerian" required>
+
+                <label>Phone Number *</label>
+                <input type="tel" name="phone" required>
+
+                <label>Medical Issues / Record</label>
+                <textarea name="medical" rows="2"></textarea>
+
+                <button type="submit" class="btn" style="width:100%; margin-top:10px;">SAVE & GENERATE ID</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- RETRIEVE PAGE -->
+<div id="page-retrieve" class="page">
+    <div class="header">
+        <button onclick="navigate('dashboard')" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">&larr; Back</button>
+        <span style="margin-left:10px;">Retrieve Records</span>
+    </div>
+    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+        <div class="card">
+            <label>Search by ID Number</label>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="search-input" placeholder="e.g., ALPHA-2024-001" onkeyup="searchRecords()">
+                <button class="btn" onclick="searchRecords()">Search</button>
+            </div>
+        </div>
+        <div id="records-list">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div id="page-settings" class="page">
+    <div class="header">
+        <button onclick="navigate('dashboard')" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">&larr; Back</button>
+        <span style="margin-left:10px;">Settings</span>
+    </div>
+    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+        
+        <div class="card">
+            <h3 style="margin-top:0; color:var(--primary-blue);">App Customization</h3>
+            <label>Welcome Note</label>
+            <textarea id="setting-note" rows="3"></textarea>
+            <button class="btn" onclick="updateSetting('note')">Update Note</button>
+            
+            <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
+            
+            <label>Change Password</label>
+            <input type="text" id="setting-pass" placeholder="Enter new password">
+            <button class="btn" onclick="updateSetting('pass')">Update Password</button>
+
+            <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
+
+            <label>Upload Logo</label>
+            <input type="file" id="setting-logo" accept="image/*" onchange="updateSetting('logo')">
+            
+            <label>Upload Background Image</label>
+            <input type="file" id="setting-bg" accept="image/*" onchange="updateSetting('bg')">
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0; color:var(--primary-blue);">Stories & Events</h3>
+            <label>Story Title</label>
+            <input type="text" id="story-title">
+            <label>Story Content</label>
+            <textarea id="story-body" rows="3"></textarea>
+            <label>Image (Optional)</label>
+            <input type="file" id="story-img" accept="image/*">
+            <button class="btn" onclick="addStory()">Add Story</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0; color:var(--primary-blue);">Data Transfer</h3>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">Export data to send to other devices or cloud storage.</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn" onclick="exportData()">Export Data</button>
+                <label class="btn btn-secondary" style="margin:0;">
+                    Import Data
+                    <input type="file" style="display:none;" accept=".json" onchange="importData(this)">
+                </label>
+            </div>
+            <br>
+            <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+        </div>
+
+        <!-- Download Button for Source Code -->
+        <div class="card" style="border-top-color: #27ae60;">
+            <h3 style="margin-top:0; color: #27ae60;">Download Source Code</h3>
+            <p style="font-size:0.9rem; margin-bottom:10px;">Click below to download this application file (index.html) to upload to your server.</p>
+            <button class="btn" style="background: #27ae60;" onclick="downloadSourceCode()">Download index.html</button>
+        </div>
+    </div>
+</div>
+
+<!-- VIEW MEMBER MODAL -->
+<div id="member-modal" class="modal">
+    <div class="modal-content">
+        <span style="position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer;" onclick="closeModal()">&times;</span>
+        <div id="modal-body" style="text-align:center;">
+            <!-- Content Injected via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // ================= DATABASE SETUP (IndexedDB) + SERVER SYNC =================
+    let db;
+    const DB_NAME = 'MOW_Identification_App';
+
+    // API base (server will expose /api/settings endpoints)
+    const API_BASE = '/api';
+
+    // Default Settings
+    let appSettings = {
+        password: "alphabravo600",
+        welcomeText: "MAN O' WAR NIG UNILAG\n(WATER UNIT)",
+        logo: "",
+        background: ""
+    };
+    let members = [];
+    let stories = [];
+
+    // Initialize Database
+    const request = indexedDB.open(DB_NAME, 1);
+
+    request.onupgradeneeded = (event) => {
+        db = event.target.result;
+        if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', { keyPath: 'id' });
+        if (!db.objectStoreNames.contains('members')) db.createObjectStore('members', { keyPath: 'id' });
+        if (!db.objectStoreNames.contains('stories')) db.createObjectStore('stories', { keyPath: 'id', autoIncrement: true });
+    };
+
+    request.onsuccess = (event) => {
+        db = event.target.result;
+        loadAppState();
+    };
+
+    // Generic DB Functions
+    function dbGet(store, key) { return new Promise(r => { const tx = db.transaction(store, 'readonly').objectStore(store).get(key); tx.onsuccess = () => r(tx.result); }); }
+    function dbGetAll(store) { return new Promise(r => { const tx = db.transaction(store, 'readonly').objectStore(store).getAll(); tx.onsuccess = () => r(tx.result); }); }
+    function dbPut(store, data) { return new Promise(r => { const tx = db.transaction(store, 'readwrite').objectStore(store).put(data); tx.onsuccess = () => r(); }); }
+    function dbClear(store) { return new Promise(r => { const tx = db.transaction(store, 'readwrite').objectStore(store).clear(); tx.onsuccess = () => r(); }); }
+
+    // ================ Server sync helpers ================
+    async function serverGetSettings() {
+        try {
+            const res = await fetch(`${API_BASE}/settings/config`);
+            if (!res.ok) return null;
+            const json = await res.json();
+            return json;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    async function serverSaveSettings(settings) {
+        try {
+            const res = await fetch(`${API_BASE}/settings/config`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            return res.ok;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    // ================= CORE LOGIC =================
+
+    async function loadAppState() {
+        // Load Settings from IndexedDB first
+        const settings = await dbGet('settings', 'config');
+        if (settings) appSettings = settings;
+
+        // Then try to sync from server, overriding local if available
+        const srv = await serverGetSettings();
+        if (srv) {
+            // server returns object; ensure it uses same keys
+            appSettings = { ...appSettings, ...srv };
+            // persist server settings locally
+            await dbPut('settings', { id: 'config', ...appSettings });
+        }
+
+        // Load Members
+        members = await dbGetAll('members');
+
+        // Load Stories
+        stories = await dbGetAll('stories');
+
+        applySettings();
+    }
+
+    function applySettings() {
+        // Apply Welcome Note
+        document.getElementById('welcome-text').innerHTML = appSettings.welcomeText.replace(/\n/g, '<br>');
+        document.getElementById('setting-note').value = appSettings.welcomeText;
+
+        // Apply Logo
+        if (appSettings.logo) {
+            document.getElementById('welcome-logo').src = appSettings.logo;
+            document.getElementById('dash-logo').src = appSettings.logo;
+            document.getElementById('dash-logo').style.display = 'block';
+        } else {
+             document.getElementById('dash-logo').style.display = 'none';
+        }
+
+        // Apply Background
+        const welcomePage = document.getElementById('page-welcome');
+        if (appSettings.background) {
+            welcomePage.style.backgroundImage = `url(${appSettings.background})`;
+            welcomePage.style.backgroundSize = 'cover';
+        } else {
+            welcomePage.style.backgroundImage = '';
+        }
+
+        renderStories();
+    }
+
+    // ================= NAVIGATION =================
+
+    function navigate(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        window.scrollTo(0,0);
+        if (page === 'retrieve') renderRecords();
+    }
+
+    // ================= AUTHENTICATION =================
+
+    function attemptLogin() {
+        const user = document.getElementById('login-user').value;
+        const pass = document.getElementById('login-pass').value;
+        const err = document.getElementById('login-error');
+
+        // Validation: Username must be mix of Alpha-Hotel
+        const validWords = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel'];
+        const userRegex = new RegExp(`^(${validWords.join('|')})+$`, 'i');
+
+        if (!userRegex.test(user)) {
+            err.textContent = "Username must be military alphabet mix (e.g., AlphaBravo)";
+            err.style.display = 'block';
+            return;
+        }
+
+        if (pass === appSettings.password) {
+            err.style.display = 'none';
+            navigate('dashboard');
+        } else {
+            err.textContent = "Incorrect Password";
+            err.style.display = 'block';
+        }
+    }
+
+    function logout() {
+        document.getElementById('login-user').value = '';
+        document.getElementById('login-pass').value = '';
+        navigate('welcome');
+    }
+
+    // ================= REGISTRATION =================
+
+    let currentPhoto = "";
+
+    function previewPhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentPhoto = e.target.result;
+                document.getElementById('passport-preview').src = currentPhoto;
+                document.getElementById('passport-preview').style.display = 'block';
+                document.getElementById('passport-text').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function saveMember(e) {
+        e.preventDefault();
+        const form = e.target;
+        
+        // Generate ID: MILITARY_WORD-YEAR-SEQUENTIAL
+        const alphabet = ['ALPHA', 'BRAVO', 'CHARLIE', 'DELTA', 'ECHO', 'FOXTROT', 'GOLF', 'HOTEL'];
+        const randomWord = alphabet[Math.floor(Math.random() * alphabet.length)];
+        const year = new Date().getFullYear();
+        const count = members.length + 1;
+        const id = `${randomWord}-${year}-${count.toString().padStart(3, '0')}`;
+
+        // Get Rank
+        const rankVal = form.rankSelect.value || form.rankText.value;
+
+        const member = {
+            id: id,
+            fullName: form.fullName.value,
+            matricNumber: form.matricNumber.value,
+            rank: rankVal,
+            phone: form.phone.value,
+            department: form.department.value,
+            faculty: form.faculty.value,
+            yearEntry: form.yearEntry.value,
+            serviceYear: form.serviceYear.value,
+            yearGrad: form.yearGrad.value,
+            dob: form.dob.value,
+            state: form.state.value,
+            nationality: form.nationality.value,
+            medical: form.medical.value,
+            photo: currentPhoto,
+            dateAdded: new Date().toISOString()
+        };
+
+        // Save to DB
+        await dbPut('members', member);
+        members.push(member);
+
+        alert(`Registration Successful!\nID: ${id}`);
+        form.reset();
+        currentPhoto = "";
+        document.getElementById('passport-preview').style.display = 'none';
+        document.getElementById('passport-text').style.display = 'block';
+        navigate('retrieve');
+    }
+
+    // ================= RETRIEVAL =================
+
+    function renderRecords(filter = null) {
+        const container = document.getElementById('records-list');
+        container.innerHTML = '';
+
+        let list = members;
+        
+        if (filter) {
+            list = list.filter(m => m.id.toLowerCase().includes(filter.toLowerCase()));
+        }
+
+        if (list.length === 0) {
+            container.innerHTML = '<div class="card" style="text-align:center; color:#666;">No records found.</div>';
+            return;
+        }
+
+        list.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.style.cursor = 'pointer';
+            div.setAttribute('data-id', m.id);
+            div.onclick = () => viewMember(m.id);
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h3 style="color:var(--primary-blue); margin:0;">${m.id}</h3>
+                        <p style="margin:5px 0; font-weight:bold;">${m.fullName}</p>
+                        <small>${m.rank} - ${m.department}</small>
+                    </div>
+                    <div style="text-align:right; color:#666;">
+                        <div>${m.serviceYear}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function searchRecords() {
+        const term = document.getElementById('search-input').value;
+        renderRecords(term);
+
+        // Highlight Logic
+        if (term) {
+            // Look for exact match ID
+            const match = document.querySelector(`[data-id="${term.toUpperCase()}"]`);
+            if (match) {
+                match.classList.add('flash-highlight');
+                match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+
+    function viewMember(id) {
+        const m = members.find(x => x.id === id);
+        if (!m) return;
+
+        const modal = document.getElementById('member-modal');
+        const body = document.getElementById('modal-body');
+
+        body.innerHTML = `
+            ${m.photo ? `<img src="${m.photo}" style="width:120px; height:150px; object-fit:cover; border-radius:4px; border:1px solid #ccc; margin-bottom:10px;">` : ''}
+            <h2 style="font-family: 'Oswald'; margin:0;">${m.fullName}</h2>
+            <div style="background:var(--primary-blue); color:white; display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.8rem; margin-bottom:10px;">${m.id}</div>
+            
+            <div style="text-align:left; background:#f9f9f9; padding:15px; border-radius:5px; margin-top:15px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div><strong>Rank:</strong> ${m.rank}</div>
+                    <div><strong>Matric:</strong> ${m.matricNumber}</div>
+                    <div><strong>Dept:</strong> ${m.department}</div>
+                    <div><strong>Faculty:</strong> ${m.faculty}</div>
+                    <div><strong>Phone:</strong> ${m.phone}</div>
+                    <div><strong>DOB:</strong> ${m.dob}</div>
+                    <div><strong>State:</strong> ${m.state}</div>
+                    <div><strong>Nationality:</strong> ${m.nationality}</div>
+                    <div><strong>Service Year:</strong> ${m.serviceYear}</div>
+                    <div><strong>Graduating:</strong> ${m.yearGrad || 'N/A'}</div>
+                </div>
+                <hr style="border:0; border-top:1px solid #ddd; margin:10px 0;">
+                <p><strong>Medical Records:</strong><br> ${m.medical || 'None'}</p>
+            </div>
+            <button class="btn" style="margin-top:15px;" onclick="closeModal()">Close</button>
+        `;
+
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('member-modal').style.display = 'none';
+    }
+
+    // ================= SETTINGS =================
+
+    async function updateSetting(type) {
+        if (type === 'note') {
+            const note = document.getElementById('setting-note').value;
+            appSettings.welcomeText = note;
+        } else if (type === 'pass') {
+            const pass = document.getElementById('setting-pass').value;
+            if(!pass) return alert("Enter a password");
+            appSettings.password = pass;
+        } else if (type === 'logo') {
+            const input = document.getElementById('setting-logo');
+            if (input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => { appSettings.logo = e.target.result; saveAndApply(); };
+                reader.readAsDataURL(input.files[0]);
+                return;
+            }
+        } else if (type === 'bg') {
+            const input = document.getElementById('setting-bg');
+            if (input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => { appSettings.background = e.target.result; saveAndApply(); };
+                reader.readAsDataURL(input.files[0]);
+                return;
+            }
+        }
+        saveAndApply();
+    }
+
+    async function saveAndApply() {
+        await dbPut('settings', { id: 'config', ...appSettings });
+        // best-effort server sync
+        try {
+            const ok = await serverSaveSettings(appSettings);
+            if (!ok) console.warn('Server settings save failed or server unreachable');
+        } catch (e) {
+            console.warn('Server settings save error', e);
+        }
+        applySettings();
+        alert("Settings Saved!");
+    }
+
+    // ================= STORIES =================
+
+    function renderStories() {
+        const container = document.getElementById('stories-container');
+        container.innerHTML = '';
+        
+        if(stories.length === 0) {
+            container.innerHTML = '<p style="color:#666;">No stories yet. Add in Settings.</p>';
+            return;
+        }
+
+        stories.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                ${s.image ? `<img src="${s.image}" style="width:100%; height:180px; object-fit:cover; margin-bottom:10px; border-radius:4px;">` : ''}
+                <h4 style="margin:0;">${s.title}</h4>
+                <p style="font-size:0.9rem; color:#555;">${s.content}</p>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    async function addStory() {
+        const title = document.getElementById('story-title').value;
+        const content = document.getElementById('story-body').value;
+        const fileInput = document.getElementById('story-img');
+
+        if (!title || !content) return alert("Title and content required");
+
+        const story = { title, content, image: null };
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                story.image = e.target.result;
+                await dbPut('stories', story);
+                stories.push(story);
+                renderStories();
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            await dbPut('stories', story);
+            stories.push(story);
+            renderStories();
+        }
+        
+        alert("Story Added");
+        document.getElementById('story-title').value = '';
+        document.getElementById('story-body').value = '';
+        fileInput.value = '';
+    }
+
+    // ================= DATA TRANSFER =================
+
+    function exportData() {
+        const data = {
+            settings: appSettings,
+            members: members,
+            stories: stories,
+            exportDate: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mow_backup.json';
+        a.click();
+    }
+
+    function importData(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    
+                    if (confirm("This will overwrite current data. Continue?")) {
+                        // Clear existing
+                        await dbClear('members');
+                        await dbClear('stories');
+                        
+                        // Import Members
+                        if (imported.members) {
+                            for (let m of imported.members) {
+                                await dbPut('members', m);
+                            }
+                        }
+                        
+                        // Import Stories
+                        if (imported.stories) {
+                            for (let s of imported.stories) {
+                                delete s.id; // Auto-increment new IDs
+                                await dbPut('stories', s);
+                            }
+                        }
+
+                        // Reload state
+                        await loadAppState();
+                        alert("Data Import Successful!");
+                    }
+                } catch (err) {
+                    alert("Invalid file format");
+                }
+            };
+            reader.readAsText(input.files[0]);
+        }
+    }
+
+    async function clearAllData() {
+        if(confirm("Delete ALL data? This cannot be undone.")) {
+            await dbClear('members');
+            await dbClear('stories');
+            members = [];
+            stories = [];
+            renderStories();
+            renderRecords();
+            alert("Data cleared.");
+        }
+    }
+
+    // ================= DOWNLOAD SOURCE CODE =================
+    function downloadSourceCode() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        a.click();
+    }
+
+</script>
+</body>
+</html>
