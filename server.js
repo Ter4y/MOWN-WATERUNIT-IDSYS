@@ -8,7 +8,7 @@ const validator = require('validator');
 const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
-app.set('trust proxy',  1)\
+app.set('trust proxy',  1)
 
 // Security Middleware
 app.use(helmet());
@@ -22,6 +22,7 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.'
+  trustproxy: true
 });
 
 app.use(limiter);
