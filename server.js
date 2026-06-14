@@ -8,7 +8,7 @@ const validator = require('validator');
 const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
-
+app.set('trust proxy',  1)
 // Security Middleware
 app.use(helmet());
 app.use(cors({
