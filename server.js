@@ -9,7 +9,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 app.set('trust proxy',  1)\
-app.get('/',(req,res)=> { res.json({ status: "server runn})
+
 // Security Middleware
 app.use(helmet());
 app.use(cors({
